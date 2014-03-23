@@ -14,24 +14,24 @@ icon from http://live.gnome.org/AlarmClock/Blueprints/BetterIcons
 
 import sys
 from datetime import *
-from PyQt4 import QtCore, QtGui, QtNetwork, QtWebKit
+from PyQt5 import QtCore, QtWidgets, QtGui, QtNetwork, QtWebKit
 
-class SettingsWindow(QtGui.QWidget):
+class SettingsWindow(QtWidgets.QWidget):
 
 	def __init__(self, p):
 		super(SettingsWindow, self).__init__()
 		
-		self.start_time_label     = QtGui.QLabel("Set the Start Time")
-		self.target_time_label    = QtGui.QLabel("Set the End Time")
+		self.start_time_label     = QtWidgets.QLabel("Set the Start Time")
+		self.target_time_label    = QtWidgets.QLabel("Set the End Time")
 		
 		msg_lbl_text  = "Set the display message<br /><br />"
 		msg_lbl_text += "<i>{:d} = hours, {:02d} = minutes,<br /> ':' is displayed as is,<br />"
 		msg_lbl_text += "basic HTML and inline CSS allowed. <br />See Qt4 Documentation for more info.</i>"
 		
-		self.message_label        = QtGui.QLabel(msg_lbl_text)
+		self.message_label        = QtWidgets.QLabel(msg_lbl_text)
 		
-		self.start_time_tbox      = QtGui.QTimeEdit(QtCore.QTime(10,00,00))
-		self.target_time_tbox     = QtGui.QTimeEdit(QtCore.QTime(10,30,00))
+		self.start_time_tbox      = QtWidgets.QTimeEdit(QtCore.QTime(10,00,00))
+		self.target_time_tbox     = QtWidgets.QTimeEdit(QtCore.QTime(10,30,00))
 		
 		self. start_time_tbox.setDisplayFormat("hh:mm:ss")
 		self.target_time_tbox.setDisplayFormat("hh:mm:ss")
@@ -41,16 +41,16 @@ class SettingsWindow(QtGui.QWidget):
 		msg += "{:d}:{:02d}"
 		msg += "</span>"
 		
-		self.message_txtbox       = QtGui.QTextEdit()
+		self.message_txtbox       = QtWidgets.QTextEdit()
 		self.message_txtbox.setPlainText(msg)
 		
-		self.save_settings_button = QtGui.QPushButton("Save Settings")
-		self.close_button         = QtGui.QPushButton("Close Window")
+		self.save_settings_button = QtWidgets.QPushButton("Save Settings")
+		self.close_button         = QtWidgets.QPushButton("Close Window")
 		
 		self.save_settings_button.clicked.connect(p.writeSettings)
 		self.close_button.clicked.connect(self.hide)
 
-		self.layout = QtGui.QGridLayout()
+		self.layout = QtWidgets.QGridLayout()
 		
 		self.layout.addWidget(self.start_time_label,     0, 0)
 		self.layout.addWidget(self.start_time_tbox,      0, 2)
@@ -72,7 +72,7 @@ class SettingsWindow(QtGui.QWidget):
 #		self.show()
 		
 
-class MainWindow(QtGui.QLabel):
+class MainWindow(QtWidgets.QLabel):
 
 	def __init__(self):
 #		print("Creating MainWindow instance...")
@@ -88,25 +88,25 @@ class MainWindow(QtGui.QLabel):
 		self.show          ()
 		self.setText       ("")
 		
-		QtGui.QApplication.desktop().screenCountChanged.connect(self.screenCountChangedSlot)
+		QtWidgets.QApplication.desktop().screenCountChanged.connect(self.screenCountChangedSlot)
 		self.screenCountChangedSlot(0)
 		
 		width = len(self.SettingsWindow.message_txtbox.toPlainText()) * 2
 		
 		self.resize         (width, 50)
 
-		self.restoreAction  = QtGui.QAction(self.tr("&Restore"), self)
-		self.settingsAction = QtGui.QAction(self.tr("&Settings"), self)
-		self.quitAction     = QtGui.QAction(self.tr("&Quit"),    self)
+		self.restoreAction  = QtWidgets.QAction(self.tr("&Restore"),  self)
+		self.settingsAction = QtWidgets.QAction(self.tr("&Settings"), self)
+		self.quitAction     = QtWidgets.QAction(self.tr("&Quit"),     self)
 		
-		self.trayIconMenu   = QtGui.QMenu  (self)
+		self.trayIconMenu   = QtWidgets.QMenu  (self)
 
-		self.trayIcon       = QtGui.QSystemTrayIcon(QtGui.QIcon('c:\program files\countdown\icon.png'), self)
+		self.trayIcon       = QtWidgets.QSystemTrayIcon(QtGui.QIcon('c:\program files\countdown\icon.png'), self)
 
 		self. restoreAction.triggered.connect(self.showNormal)
 		self.settingsAction.triggered.connect(self.SettingsWindow.showNormal)
 		self.    quitAction.triggered.connect(self.trayIcon.hide)
-		self.    quitAction.triggered.connect(QtGui.qApp.quit)
+		self.    quitAction.triggered.connect(QtWidgets.qApp.quit)
 
 		self.trayIconMenu.addAction(self.restoreAction)
 		self.trayIconMenu.addSeparator()
@@ -153,11 +153,11 @@ class MainWindow(QtGui.QLabel):
 
 	def screenCountChangedSlot(self, numScreens):
 		print("Number of screens has changed...")
-		print("There are now {num_screens} screen(s)/Display(s)".format(num_screens = QtGui.QDesktopWidget().screenCount()))
+		print("There are now {num_screens} screen(s)/Display(s)".format(num_screens = QtWidgets.QDesktopWidget().screenCount()))
 		
-		if QtGui.QDesktopWidget().screenCount() == 2:
+		if QtWidgets.QDesktopWidget().screenCount() == 2:
 			# 0 = primary screen, 1 = secondary
-			screenres = QtGui.QApplication.desktop().screenGeometry(1)
+			screenres = QtWidgets.QApplication.desktop().screenGeometry(1)
 			self.move(QtCore.QPoint(screenres.x(), screenres.y()));
 		else:
 			self.move(0,0)
@@ -196,7 +196,7 @@ class MainWindow(QtGui.QLabel):
 
 
 def main():
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     w   = MainWindow()
     sys.exit(app.exec_())
 
